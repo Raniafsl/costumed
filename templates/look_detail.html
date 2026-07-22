@@ -29,6 +29,10 @@
             <dd>{{ look.scene_label }}</dd>
             <dt>Designer</dt>
             <dd>{{ look.designer }}</dd>
+            {% if look.brand %}
+            <dt>Brand</dt>
+            <dd>{{ look.brand }}</dd>
+            {% endif %}
             <dt>Era</dt>
             <dd>{{ look.era_decade }}</dd>
             <dt>Genre</dt>
@@ -36,6 +40,10 @@
             {% if look.materials %}
             <dt>Materials</dt>
             <dd>{{ look.materials|map('capitalize')|join(', ') }}</dd>
+            {% endif %}
+            {% if look.accessories %}
+            <dt>Accessories</dt>
+            <dd>{{ look.accessories }}</dd>
             {% endif %}
         </dl>
     </div>

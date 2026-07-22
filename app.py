@@ -106,6 +106,8 @@ def add_look():
             request.form.get("image_url", "").strip(),
             request.form.getlist("colors"),
             request.form.getlist("materials"),
+            request.form.get("brand", "").strip(),
+            request.form.get("accessories", "").strip(),
         )
         conn.commit()
         conn.close()

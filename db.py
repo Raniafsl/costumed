@@ -58,15 +58,19 @@ CREATE TABLE IF NOT EXISTS looks (
     description TEXT,
     image_url TEXT,
     colors TEXT,
-    materials TEXT
+    materials TEXT,
+    brand TEXT,
+    accessories TEXT
 );
 """
 
 # Runs every time init_db() is called — safe to repeat, and it's what
-# brings an already-existing looks table (created before the materials
-# field existed) up to date without touching any existing data.
+# brings an already-existing looks table (created before these fields
+# existed) up to date without touching any existing data.
 MIGRATIONS = """
 ALTER TABLE looks ADD COLUMN IF NOT EXISTS materials TEXT;
+ALTER TABLE looks ADD COLUMN IF NOT EXISTS brand TEXT;
+ALTER TABLE looks ADD COLUMN IF NOT EXISTS accessories TEXT;
 """
 
 
@@ -128,14 +132,16 @@ def find_or_create_character(conn, name, film_id):
 
 
 def insert_look(conn, character_id, scene_label, designer, era_decade,
-                 description, image_url, colors, materials=None):
+                 description, image_url, colors, materials=None, brand="", accessories=""):
     cur = conn.cursor()
     cur.execute(
         """INSERT INTO looks
-           (character_id, scene_label, designer, era_decade, description, image_url, colors, materials)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+           (character_id, scene_label, designer, era_decade, description, image_url,
+            colors, materials, brand, accessories)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
         (character_id, scene_label, designer, era_decade, description,
-         image_url, colors_to_str(colors), colors_to_str(materials or [])),
+         image_url, colors_to_str(colors), colors_to_str(materials or []),
+         brand, accessories),
     )
     return cur.fetchone()["id"]
 

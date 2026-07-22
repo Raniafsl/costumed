@@ -26,6 +26,14 @@ COLOR_HEX = {
     "rust": "#a4552e", "purple": "#5c3a5e", "grey": "#8a8a8a",
 }
 
+# Fixed material vocabulary, same idea as COLOR_CATEGORIES — every look's
+# materials must come from here, so the material filter stays meaningful.
+MATERIAL_CATEGORIES = [
+    "silk", "velvet", "tulle", "lace", "leather", "wool", "cotton",
+    "satin", "chiffon", "brocade", "damask", "tweed", "fur", "sequin",
+    "denim", "organza", "linen",
+]
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS films (
     id SERIAL PRIMARY KEY,
@@ -49,8 +57,16 @@ CREATE TABLE IF NOT EXISTS looks (
     era_decade TEXT,
     description TEXT,
     image_url TEXT,
-    colors TEXT
+    colors TEXT,
+    materials TEXT
 );
+"""
+
+# Runs every time init_db() is called — safe to repeat, and it's what
+# brings an already-existing looks table (created before the materials
+# field existed) up to date without touching any existing data.
+MIGRATIONS = """
+ALTER TABLE looks ADD COLUMN IF NOT EXISTS materials TEXT;
 """
 
 
@@ -67,6 +83,7 @@ def init_db():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(SCHEMA)
+    cur.execute(MIGRATIONS)
     conn.commit()
     cur.close()
     conn.close()
@@ -111,14 +128,14 @@ def find_or_create_character(conn, name, film_id):
 
 
 def insert_look(conn, character_id, scene_label, designer, era_decade,
-                 description, image_url, colors):
+                 description, image_url, colors, materials=None):
     cur = conn.cursor()
     cur.execute(
         """INSERT INTO looks
-           (character_id, scene_label, designer, era_decade, description, image_url, colors)
-           VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+           (character_id, scene_label, designer, era_decade, description, image_url, colors, materials)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
         (character_id, scene_label, designer, era_decade, description,
-         image_url, colors_to_str(colors)),
+         image_url, colors_to_str(colors), colors_to_str(materials or [])),
     )
     return cur.fetchone()["id"]
 
@@ -151,7 +168,10 @@ def get_all_looks(genre=None, decade=None, search=None):
     cur.execute(query, params)
     rows = cur.fetchall()
     conn.close()
-    return [dict(r, colors=colors_from_str(r["colors"])) for r in rows]
+    return [
+        dict(r, colors=colors_from_str(r["colors"]), materials=colors_from_str(r["materials"]))
+        for r in rows
+    ]
 
 
 def get_random_look_id():
@@ -179,7 +199,7 @@ def get_look(look_id):
     conn.close()
     if row is None:
         return None
-    return dict(row, colors=colors_from_str(row["colors"]))
+    return dict(row, colors=colors_from_str(row["colors"]), materials=colors_from_str(row["materials"]))
 
 
 def get_other_looks_for_character(character_id, exclude_look_id):
@@ -195,7 +215,10 @@ def get_other_looks_for_character(character_id, exclude_look_id):
     )
     rows = cur.fetchall()
     conn.close()
-    return [dict(r, colors=colors_from_str(r["colors"])) for r in rows]
+    return [
+        dict(r, colors=colors_from_str(r["colors"]), materials=colors_from_str(r["materials"]))
+        for r in rows
+    ]
 
 
 def get_distinct_genres():

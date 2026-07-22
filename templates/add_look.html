@@ -54,6 +54,14 @@
             {% endfor %}
         </div>
     </div>
+    <div>
+        <label>Materials</label>
+        <div class="color-checks">
+            {% for m in materials %}
+            <label><input type="checkbox" name="materials" value="{{ m }}"> {{ m }}</label>
+            {% endfor %}
+        </div>
+    </div>
     <button type="submit" class="submit-btn">Add to archive</button>
 </form>
 

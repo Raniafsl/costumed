@@ -699,6 +699,8 @@ main { padding: 3rem; max-width: 1200px; margin: 0 auto; }
 .entry-form > div:nth-child(8) { animation-delay: 0.30s; }
 .entry-form > div:nth-child(9) { animation-delay: 0.34s; }
 .entry-form > div:nth-child(10) { animation-delay: 0.38s; }
+.entry-form > div:nth-child(11) { animation-delay: 0.42s; }
+.entry-form > div:nth-child(12) { animation-delay: 0.46s; }
 @keyframes rise-in {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }

@@ -33,6 +33,10 @@
             <dd>{{ look.era_decade }}</dd>
             <dt>Genre</dt>
             <dd>{{ look.film_genre }}</dd>
+            {% if look.materials %}
+            <dt>Materials</dt>
+            <dd>{{ look.materials|map('capitalize')|join(', ') }}</dd>
+            {% endif %}
         </dl>
     </div>
     <div>

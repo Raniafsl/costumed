@@ -22,8 +22,9 @@ app.jinja_env.globals["gradient_for"] = gradient_for
 
 @app.route("/")
 def index():
-    """Browse page — supports filtering by color, genre, and decade via query params."""
+    """Browse page — supports filtering by color, material, genre, and decade via query params."""
     color = request.args.get("color", "")
+    material = request.args.get("material", "")
     genre = request.args.get("genre", "")
     decade = request.args.get("decade", "")
     search = request.args.get("q", "").strip()
@@ -32,17 +33,22 @@ def index():
 
     if color:
         looks = [l for l in looks if color in l["colors"]]
+    if material:
+        looks = [l for l in looks if material in l["materials"]]
 
-    featured = random.choice(looks) if looks and not (color or genre or decade or search) else None
+    any_filter = color or material or genre or decade or search
+    featured = random.choice(looks) if looks and not any_filter else None
 
     return render_template(
         "index.html",
         looks=looks,
         featured=featured,
         colors=db.COLOR_CATEGORIES,
+        materials=db.MATERIAL_CATEGORIES,
         genres=db.get_distinct_genres(),
         decades=db.get_distinct_decades(),
         selected_color=color,
+        selected_material=material,
         selected_genre=genre,
         selected_decade=decade,
         search=search,
@@ -99,13 +105,14 @@ def add_look():
             request.form.get("description", "").strip(),
             request.form.get("image_url", "").strip(),
             request.form.getlist("colors"),
+            request.form.getlist("materials"),
         )
         conn.commit()
         conn.close()
 
         return redirect(url_for("look_detail", look_id=look_id))
 
-    return render_template("add_look.html", colors=db.COLOR_CATEGORIES)
+    return render_template("add_look.html", colors=db.COLOR_CATEGORIES, materials=db.MATERIAL_CATEGORIES)
 
 
 def ensure_seeded():

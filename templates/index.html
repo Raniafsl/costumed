@@ -35,6 +35,7 @@
         {% if selected_genre %}<input type="hidden" name="genre" value="{{ selected_genre }}">{% endif %}
         {% if selected_decade %}<input type="hidden" name="decade" value="{{ selected_decade }}">{% endif %}
         {% if selected_color %}<input type="hidden" name="color" value="{{ selected_color }}">{% endif %}
+        {% if selected_material %}<input type="hidden" name="material" value="{{ selected_material }}">{% endif %}
     </form>
 </div>
 
@@ -68,14 +69,23 @@
                 {% endfor %}
             </select>
         </div>
+        <div>
+            <label for="material">Material</label>
+            <select name="material" id="material" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for m in materials %}
+                <option value="{{ m }}" {% if m == selected_material %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </form>
-    {% if selected_color or selected_genre or selected_decade or search %}
+    {% if selected_color or selected_material or selected_genre or selected_decade or search %}
     <a href="{{ url_for('index') }}"><button type="button">Clear</button></a>
     {% endif %}
 </div>
 
 {% if looks %}
-{% if selected_color or selected_genre or selected_decade or search %}
+{% if selected_color or selected_material or selected_genre or selected_decade or search %}
 <p class="result-count">{{ looks|length }} look{{ 's' if looks|length != 1 else '' }} found</p>
 {% endif %}
 <div class="archive-grid">

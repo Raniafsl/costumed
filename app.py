@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
 import db
 
 app = Flask(__name__)
@@ -14,8 +15,6 @@ def index():
 
     looks = db.get_all_looks(genre=genre or None, decade=decade or None)
 
-    # Color filter happens in Python since colors are stored as a delimited
-    # string rather than a real join table — fine at this dataset size.
     if color:
         looks = [l for l in looks if color in l["colors"]]
 
@@ -81,6 +80,22 @@ def add_look():
     return render_template("add_look.html", colors=db.COLOR_CATEGORIES)
 
 
-if __name__ == "__main__":
+def ensure_seeded():
+    """On platforms with ephemeral disks (like Render's free tier), the sqlite
+    file won't persist between deploys — so seed automatically if empty."""
     db.init_db()
-    app.run(debug=True)
+    conn = db.get_connection()
+    film_count = conn.execute("SELECT COUNT(*) FROM films").fetchone()[0]
+    conn.close()
+    if film_count == 0:
+        import seed
+        seed.run()
+
+
+if __name__ == "__main__":
+    ensure_seeded()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
+else:
+    # Also ensure the schema exists + seed data when run under gunicorn (Render, etc.)
+    ensure_seeded()

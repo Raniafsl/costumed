@@ -109,11 +109,12 @@ def add_look():
 
 
 def ensure_seeded():
-    """On platforms with ephemeral disks (like Render's free tier), the sqlite
-    file won't persist between deploys — so seed automatically if empty."""
+    """On first run against a fresh database, seed it with the starter dataset."""
     db.init_db()
     conn = db.get_connection()
-    film_count = conn.execute("SELECT COUNT(*) FROM films").fetchone()[0]
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) AS c FROM films")
+    film_count = cur.fetchone()["c"]
     conn.close()
     if film_count == 0:
         import seed

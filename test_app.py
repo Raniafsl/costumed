@@ -3,15 +3,31 @@ import pytest
 import db as db_module
 from app import app
 
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
+
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
-    """Point the app at a throwaway sqlite file for each test."""
-    test_db_path = tmp_path / "test_costumed.db"
-    monkeypatch.setattr(db_module, "DB_PATH", str(test_db_path))
+def client(monkeypatch):
+    """Point the app at a separate test database and reset it for each test.
+
+    Requires TEST_DATABASE_URL — a database distinct from DATABASE_URL — so
+    running the suite can never truncate or clutter the real archive data.
+    A free Neon "branch" off the main project works well for this.
+    """
+    if not TEST_DATABASE_URL:
+        pytest.skip(
+            "Set TEST_DATABASE_URL to a separate Postgres database to run these "
+            "tests (e.g. a free Neon branch) — this keeps pytest from ever "
+            "touching real archive data."
+        )
+    monkeypatch.setattr(db_module, "DATABASE_URL", TEST_DATABASE_URL)
     db_module.init_db()
 
     conn = db_module.get_connection()
+    cur = conn.cursor()
+    cur.execute("TRUNCATE looks, characters, films RESTART IDENTITY CASCADE")
+    conn.commit()
+
     film_id = db_module.find_or_create_film(conn, "Test Film", 2020, "Test Director", "horror")
     char_id = db_module.find_or_create_character(conn, "Test Character", film_id)
     db_module.insert_look(
@@ -85,9 +101,9 @@ def test_add_look_form_post_creates_entry(client):
 
 def test_multiple_looks_same_character_show_as_related(client):
     conn = db_module.get_connection()
-    char_row = conn.execute(
-        "SELECT id FROM characters WHERE name = 'Test Character'"
-    ).fetchone()
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM characters WHERE name = 'Test Character'")
+    char_row = cur.fetchone()
     db_module.insert_look(
         conn, char_row["id"], "Second Scene", "Test Designer", "1990s",
         "Another look for the same character", "", ["ivory"],

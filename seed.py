@@ -1,9 +1,8 @@
 """
-Populates costumed.db with the starter dataset.
+Populates the database with the starter dataset.
 Run with: python seed.py
-Safe to re-run — it deletes the existing db file first.
+Safe to re-run — it truncates existing tables first.
 """
-import os
 import db
 
 DATA = [
@@ -332,11 +331,13 @@ DATA = [
 
 
 def run():
-    if os.path.exists(db.DB_PATH):
-        os.remove(db.DB_PATH)
     db.init_db()
 
     conn = db.get_connection()
+    cur = conn.cursor()
+    cur.execute("TRUNCATE looks, characters, films RESTART IDENTITY CASCADE")
+    conn.commit()
+
     for film_title, year, director, genre, char_name, looks in DATA:
         film_id = db.find_or_create_film(conn, film_title, year, director, genre)
         character_id = db.find_or_create_character(conn, char_name, film_id)
@@ -345,9 +346,12 @@ def run():
             db.insert_look(conn, character_id, scene_label, designer, era, desc, image_url, colors)
     conn.commit()
 
-    film_count = conn.execute("SELECT COUNT(*) FROM films").fetchone()[0]
-    char_count = conn.execute("SELECT COUNT(*) FROM characters").fetchone()[0]
-    look_count = conn.execute("SELECT COUNT(*) FROM looks").fetchone()[0]
+    cur.execute("SELECT COUNT(*) AS c FROM films")
+    film_count = cur.fetchone()["c"]
+    cur.execute("SELECT COUNT(*) AS c FROM characters")
+    char_count = cur.fetchone()["c"]
+    cur.execute("SELECT COUNT(*) AS c FROM looks")
+    look_count = cur.fetchone()["c"]
     conn.close()
 
     print(f"Seeded {film_count} films, {char_count} characters, {look_count} looks.")

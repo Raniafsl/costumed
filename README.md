@@ -4,7 +4,7 @@ A searchable archive of iconic film costumes, filterable by genre, era, and colo
 
 ## Why this exists
 
-Most "portfolio project" databases are generic CRUD apps. This one is a curated archive: every costume look is tagged with a designer, era, and a fixed set of color categories, so you can browse an entire film's wardrobe, or flip it around and see every look across every film that shares a color palette — a "mood board" view built for visual discovery rather than raw data lookup.
+Most fashion databases are generic CRUD apps. This one is a curated archive: every costume look is tagged with a designer, era, and a fixed set of color categories, so you can browse an entire film's wardrobe, or flip it around and see every look across every film that shares a color palette — a "mood board" view built for visual discovery rather than raw data lookup.
 
 ## Features
 

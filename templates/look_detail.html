@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ look.character_name }} — Costumed{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">{{ look.film_title }} &middot; {{ look.film_year }}</span>
+<h1 class="page-title">{{ look.character_name }}</h1>
+
+<div class="detail-layout">
+    <div>
+        {% if look.image_url %}
+        <img src="{{ look.image_url }}" alt="{{ look.scene_label }}" style="width:100%;">
+        {% endif %}
+        <div class="detail-swatches">
+            {% for c in look.colors %}
+            <a href="{{ url_for('mood_board', color=c) }}" style="background: {{ color_hex(c) }};" title="{{ c }}"></a>
+            {% endfor %}
+        </div>
+        <dl class="detail-facts">
+            <dt>Scene / Look</dt>
+            <dd>{{ look.scene_label }}</dd>
+            <dt>Designer</dt>
+            <dd>{{ look.designer }}</dd>
+            <dt>Era</dt>
+            <dd>{{ look.era_decade }}</dd>
+            <dt>Genre</dt>
+            <dd>{{ look.film_genre }}</dd>
+        </dl>
+    </div>
+    <div>
+        <p>{{ look.description }}</p>
+
+        {% if other_looks %}
+        <h3 class="related-heading">More from {{ look.character_name }}</h3>
+        <div class="archive-grid">
+            {% for other in other_looks %}
+            <a href="{{ url_for('look_detail', look_id=other.id) }}" class="look-card">
+                <div class="swatch-strip">
+                    {% for c in other.colors %}
+                    <span style="background: {{ color_hex(c) }};"></span>
+                    {% endfor %}
+                </div>
+                <div class="card-body">
+                    <span class="card-eyebrow">{{ other.film_title }}</span>
+                    <h2 class="card-name">{{ other.scene_label }}</h2>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ color }} — Mood Board{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">Mood Board</span>
+<h1 class="page-title">Every look in {{ color }}</h1>
+
+{% if looks %}
+<div class="archive-grid">
+    {% for look in looks %}
+    <a href="{{ url_for('look_detail', look_id=look.id) }}" class="look-card">
+        <div class="swatch-strip">
+            {% for c in look.colors %}
+            <span style="background: {{ color_hex(c) }};"></span>
+            {% endfor %}
+        </div>
+        <div class="card-body">
+            <span class="card-eyebrow">{{ look.film_title }} &middot; {{ look.film_year }}</span>
+            <h2 class="card-name">{{ look.character_name }}</h2>
+            <p class="card-scene">{{ look.scene_label }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">No looks tagged in this color yet.</p>
+{% endif %}
+
+{% endblock %}

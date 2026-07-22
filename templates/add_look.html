@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Add a Look — Costumed{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">Contribute</span>
+<h1 class="page-title">Add a look to the archive</h1>
+
+<form method="post" class="entry-form">
+    <div>
+        <label for="film_title">Film title</label>
+        <input type="text" id="film_title" name="film_title" required>
+    </div>
+    <div>
+        <label for="film_year">Film year</label>
+        <input type="number" id="film_year" name="film_year" required min="1900" max="2100">
+    </div>
+    <div>
+        <label for="director">Director</label>
+        <input type="text" id="director" name="director">
+    </div>
+    <div>
+        <label for="genre">Genre</label>
+        <input type="text" id="genre" name="genre" placeholder="e.g. horror, period-drama, sci-fi, fashion">
+    </div>
+    <div>
+        <label for="character_name">Character name</label>
+        <input type="text" id="character_name" name="character_name" required>
+    </div>
+    <div>
+        <label for="scene_label">Scene / look label</label>
+        <input type="text" id="scene_label" name="scene_label" placeholder="e.g. final ballroom scene">
+    </div>
+    <div>
+        <label for="designer">Costume designer</label>
+        <input type="text" id="designer" name="designer">
+    </div>
+    <div>
+        <label for="era_decade">Era (decade)</label>
+        <input type="text" id="era_decade" name="era_decade" placeholder="e.g. 1960s">
+    </div>
+    <div>
+        <label for="image_url">Image URL</label>
+        <input type="url" id="image_url" name="image_url" placeholder="https://...">
+    </div>
+    <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"></textarea>
+    </div>
+    <div>
+        <label>Colors</label>
+        <div class="color-checks">
+            {% for c in colors %}
+            <label><input type="checkbox" name="colors" value="{{ c }}"> {{ c }}</label>
+            {% endfor %}
+        </div>
+    </div>
+    <button type="submit" class="submit-btn">Add to archive</button>
+</form>
+
+{% endblock %}

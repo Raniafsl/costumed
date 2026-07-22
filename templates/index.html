@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Costumed — Archive{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">The Archive</span>
+<h1 class="page-title">Looks worth remembering</h1>
+
+<div class="filters">
+    <form method="get" action="{{ url_for('index') }}">
+        <div>
+            <label for="genre">Genre</label>
+            <select name="genre" id="genre" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for g in genres %}
+                <option value="{{ g }}" {% if g == selected_genre %}selected{% endif %}>{{ g }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="decade">Era</label>
+            <select name="decade" id="decade" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for d in decades %}
+                <option value="{{ d }}" {% if d == selected_decade %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="color">Color</label>
+            <select name="color" id="color" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for c in colors %}
+                <option value="{{ c }}" {% if c == selected_color %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    {% if selected_color or selected_genre or selected_decade %}
+    <a href="{{ url_for('index') }}"><button type="button">Clear</button></a>
+    {% endif %}
+</div>
+
+{% if looks %}
+<div class="archive-grid">
+    {% for look in looks %}
+    <a href="{{ url_for('look_detail', look_id=look.id) }}" class="look-card">
+        <div class="swatch-strip">
+            {% for c in look.colors %}
+            <span style="background: {{ color_hex(c) }};"></span>
+            {% endfor %}
+        </div>
+        <div class="card-body">
+            <span class="card-eyebrow">{{ look.film_title }} &middot; {{ look.film_year }}</span>
+            <h2 class="card-name">{{ look.character_name }}</h2>
+            <p class="card-scene">{{ look.scene_label }}</p>
+            <div class="card-meta">{{ look.designer }}{% if look.era_decade %} &middot; {{ look.era_decade }}{% endif %}</div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">Nothing matches yet — try clearing a filter, or be the first to add this look.</p>
+{% endif %}
+
+{% endblock %}

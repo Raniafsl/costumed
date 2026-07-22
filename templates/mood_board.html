@@ -5,10 +5,30 @@
 <span class="page-eyebrow">Mood Board</span>
 <h1 class="page-title">Every look in {{ color }}</h1>
 
+<div class="mood-intro">
+    <span class="mood-swatch-lg" style="background: {{ color_hex(color) }}; --mood-glow: {{ color_hex(color) }}22;"></span>
+    <p>{{ looks|length }} look{{ 's' if looks|length != 1 else '' }} across the archive share this palette — jump straight to another color below.</p>
+</div>
+
+<div class="mood-chips">
+    {% for c in colors %}
+    <a href="{{ url_for('mood_board', color=c) }}" style="background: {{ color_hex(c) }};" title="{{ c }}" class="{{ 'is-active' if c == color else '' }}"></a>
+    {% endfor %}
+</div>
+
 {% if looks %}
 <div class="archive-grid">
     {% for look in looks %}
     <a href="{{ url_for('look_detail', look_id=look.id) }}" class="look-card">
+        <div class="card-media">
+            {% if look.image_url %}
+            <img src="{{ look.image_url }}" alt="{{ look.scene_label }}" loading="lazy">
+            {% else %}
+            <div class="card-media-placeholder" style="background: {{ gradient_for(look.colors) }};">
+                <span class="placeholder-mark">{{ look.character_name[0]|upper }}</span>
+            </div>
+            {% endif %}
+        </div>
         <div class="swatch-strip">
             {% for c in look.colors %}
             <span style="background: {{ color_hex(c) }};"></span>

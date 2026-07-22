@@ -1,9 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
+import random
 import db
 
 app = Flask(__name__)
 app.jinja_env.globals["color_hex"] = lambda tag: db.COLOR_HEX.get(tag, "#999999")
+
+
+def gradient_for(colors):
+    """A little swatch-card gradient built from a look's own color tags,
+    used when no photograph is on file — keeps the archive feeling curated
+    instead of broken, and keeps us from guessing at film-still URLs."""
+    hexes = [db.COLOR_HEX.get(c, "#2a2c3d") for c in colors] or ["#2a2c3d", "#1c1e2b"]
+    if len(hexes) == 1:
+        hexes = hexes * 2
+    return "linear-gradient(135deg, " + ", ".join(hexes) + ")"
+
+
+app.jinja_env.globals["gradient_for"] = gradient_for
 
 
 @app.route("/")
@@ -12,22 +26,36 @@ def index():
     color = request.args.get("color", "")
     genre = request.args.get("genre", "")
     decade = request.args.get("decade", "")
+    search = request.args.get("q", "").strip()
 
-    looks = db.get_all_looks(genre=genre or None, decade=decade or None)
+    looks = db.get_all_looks(genre=genre or None, decade=decade or None, search=search or None)
 
     if color:
         looks = [l for l in looks if color in l["colors"]]
 
+    featured = random.choice(looks) if looks and not (color or genre or decade or search) else None
+
     return render_template(
         "index.html",
         looks=looks,
+        featured=featured,
         colors=db.COLOR_CATEGORIES,
         genres=db.get_distinct_genres(),
         decades=db.get_distinct_decades(),
         selected_color=color,
         selected_genre=genre,
         selected_decade=decade,
+        search=search,
     )
+
+
+@app.route("/surprise")
+def surprise():
+    """Whisk the visitor away to a random look in the archive."""
+    look_id = db.get_random_look_id()
+    if look_id is None:
+        return redirect(url_for("index"))
+    return redirect(url_for("look_detail", look_id=look_id))
 
 
 @app.route("/look/<int:look_id>")

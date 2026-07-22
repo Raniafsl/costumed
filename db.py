@@ -109,7 +109,7 @@ def insert_look(conn, character_id, scene_label, designer, era_decade,
     return cur.lastrowid
 
 
-def get_all_looks(genre=None, decade=None):
+def get_all_looks(genre=None, decade=None, search=None):
     conn = get_connection()
     query = """
         SELECT looks.*, characters.name AS character_name, characters.id AS character_id,
@@ -126,9 +126,23 @@ def get_all_looks(genre=None, decade=None):
     if decade:
         query += " AND looks.era_decade = ?"
         params.append(decade)
+    if search:
+        query += """ AND (
+            films.title LIKE ? OR characters.name LIKE ? OR
+            looks.scene_label LIKE ? OR looks.designer LIKE ?
+        )"""
+        needle = f"%{search}%"
+        params.extend([needle, needle, needle, needle])
     rows = conn.execute(query, params).fetchall()
     conn.close()
     return [dict(r, colors=colors_from_str(r["colors"])) for r in rows]
+
+
+def get_random_look_id():
+    conn = get_connection()
+    row = conn.execute("SELECT id FROM looks ORDER BY RANDOM() LIMIT 1").fetchone()
+    conn.close()
+    return row["id"] if row else None
 
 
 def get_look(look_id):

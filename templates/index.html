@@ -2,11 +2,45 @@
 {% block title %}Costumed — Archive{% endblock %}
 {% block content %}
 
+{% if featured %}
+<section class="hero">
+    <div>
+        <span class="hero-eyebrow">Featured from the archive</span>
+        <h1 class="hero-title">{{ featured.character_name }}</h1>
+        <p class="hero-sub">{{ featured.film_title }} &middot; {{ featured.film_year }}{% if featured.designer %} &middot; costumes by {{ featured.designer }}{% endif %}</p>
+        <div class="hero-cta">
+            <a href="{{ url_for('look_detail', look_id=featured.id) }}" class="btn">View this look</a>
+            <a href="{{ url_for('surprise') }}" class="btn ghost">Show me another ✦</a>
+        </div>
+    </div>
+    <div class="hero-figure">
+        {% if featured.image_url %}
+        <img src="{{ featured.image_url }}" alt="{{ featured.scene_label }}">
+        {% else %}
+        <div class="card-media-placeholder" style="background: {{ gradient_for(featured.colors) }};">
+            <span class="placeholder-mark">{{ featured.character_name[0]|upper }}</span>
+        </div>
+        {% endif %}
+        <span class="hero-tag">{{ featured.scene_label }}</span>
+    </div>
+</section>
+{% else %}
 <span class="page-eyebrow">The Archive</span>
 <h1 class="page-title">Looks worth remembering</h1>
+{% endif %}
+
+<div class="toolbar">
+    <form method="get" action="{{ url_for('index') }}" class="search-wrap">
+        <input type="search" id="q" name="q" value="{{ search }}" placeholder="Search a film, character, or designer&hellip;" autocomplete="off">
+        {% if selected_genre %}<input type="hidden" name="genre" value="{{ selected_genre }}">{% endif %}
+        {% if selected_decade %}<input type="hidden" name="decade" value="{{ selected_decade }}">{% endif %}
+        {% if selected_color %}<input type="hidden" name="color" value="{{ selected_color }}">{% endif %}
+    </form>
+</div>
 
 <div class="filters">
     <form method="get" action="{{ url_for('index') }}">
+        {% if search %}<input type="hidden" name="q" value="{{ search }}">{% endif %}
         <div>
             <label for="genre">Genre</label>
             <select name="genre" id="genre" onchange="this.form.submit()">
@@ -35,15 +69,27 @@
             </select>
         </div>
     </form>
-    {% if selected_color or selected_genre or selected_decade %}
+    {% if selected_color or selected_genre or selected_decade or search %}
     <a href="{{ url_for('index') }}"><button type="button">Clear</button></a>
     {% endif %}
 </div>
 
 {% if looks %}
+{% if selected_color or selected_genre or selected_decade or search %}
+<p class="result-count">{{ looks|length }} look{{ 's' if looks|length != 1 else '' }} found</p>
+{% endif %}
 <div class="archive-grid">
     {% for look in looks %}
     <a href="{{ url_for('look_detail', look_id=look.id) }}" class="look-card">
+        <div class="card-media">
+            {% if look.image_url %}
+            <img src="{{ look.image_url }}" alt="{{ look.scene_label }}" loading="lazy">
+            {% else %}
+            <div class="card-media-placeholder" style="background: {{ gradient_for(look.colors) }};">
+                <span class="placeholder-mark">{{ look.character_name[0]|upper }}</span>
+            </div>
+            {% endif %}
+        </div>
         <div class="swatch-strip">
             {% for c in look.colors %}
             <span style="background: {{ color_hex(c) }};"></span>
@@ -59,7 +105,11 @@
     {% endfor %}
 </div>
 {% else %}
-<p class="empty-state">Nothing matches yet — try clearing a filter, or be the first to add this look.</p>
+<p class="empty-state">
+    Nothing matches yet — try clearing a filter, or be the first to add this look.
+    <br>
+    <a href="{{ url_for('add_look') }}" class="btn">Add a look</a>
+</p>
 {% endif %}
 
 {% endblock %}

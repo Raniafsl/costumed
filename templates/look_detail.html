@@ -8,7 +8,16 @@
 <div class="detail-layout">
     <div>
         {% if look.image_url %}
-        <img src="{{ look.image_url }}" alt="{{ look.scene_label }}" style="width:100%;">
+        <figure class="polaroid">
+            <img src="{{ look.image_url }}" alt="{{ look.scene_label }}">
+            <figcaption>{{ look.scene_label }}</figcaption>
+        </figure>
+        {% else %}
+        <figure class="polaroid no-image">
+            <div class="card-media-placeholder" style="background: {{ gradient_for(look.colors) }};">
+                <span class="placeholder-mark">{{ look.character_name[0]|upper }}</span>
+            </div>
+        </figure>
         {% endif %}
         <div class="detail-swatches">
             {% for c in look.colors %}
@@ -27,13 +36,24 @@
         </dl>
     </div>
     <div>
-        <p>{{ look.description }}</p>
+        {% if look.description %}
+        <p class="detail-description">{{ look.description }}</p>
+        {% endif %}
 
         {% if other_looks %}
         <h3 class="related-heading">More from {{ look.character_name }}</h3>
         <div class="archive-grid">
             {% for other in other_looks %}
             <a href="{{ url_for('look_detail', look_id=other.id) }}" class="look-card">
+                <div class="card-media">
+                    {% if other.image_url %}
+                    <img src="{{ other.image_url }}" alt="{{ other.scene_label }}" loading="lazy">
+                    {% else %}
+                    <div class="card-media-placeholder" style="background: {{ gradient_for(other.colors) }};">
+                        <span class="placeholder-mark">{{ other.character_name[0]|upper }}</span>
+                    </div>
+                    {% endif %}
+                </div>
                 <div class="swatch-strip">
                     {% for c in other.colors %}
                     <span style="background: {{ color_hex(c) }};"></span>
@@ -47,6 +67,8 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        <p style="margin-top:2.5rem;"><a href="{{ url_for('surprise') }}" class="btn ghost">Take me to another look ✦</a></p>
     </div>
 </div>
 

@@ -30,8 +30,9 @@ DATA = [
     ]),
     ("Phantom Thread", 2017, "Paul Thomas Anderson", "period-drama", "The Countess", [
         dict(scene_label="Gala entrance", designer="Mark Bridges", era_decade="1950s",
-             description="A deep burgundy evening gown from the House of Woodcock, tailored with the obsessive precision the film is built around.",
-             colors=["burgundy", "ivory"], materials=["silk", "wool"], image_file=""),
+             description="A blush-pink lace gown from the House of Woodcock, tailored with the obsessive precision the film is built around.",
+             colors=["pastel-pink", "ivory"], materials=["lace", "satin"],
+             image_file="countess-phantomthread-blushgown.webp"),
     ]),
     ("Star Wars: Episode II", 2002, "George Lucas", "sci-fi", "Padmé Amidala", [
         dict(scene_label="Meadow picnic dress", designer="Trisha Biggar", era_decade="n/a",
@@ -50,8 +51,8 @@ DATA = [
     ]),
     ("The Devil Wears Prada", 2006, "David Frankel", "fashion-world", "Miranda Priestly", [
         dict(scene_label="Office entrance", designer="Patricia Field", era_decade="2000s",
-             description="A silver-grey power coat that announces her before she says a word.",
-             colors=["silver", "navy"], materials=["wool"], image_file=""),
+             description="A dark fur-collared coat, an early mock-up of Runway tucked under one arm — Miranda commanding a room before she even speaks.",
+             colors=["black"], materials=["fur"], image_file="mirandapriestly-devilwearsprada-officeentrance.png"),
         dict(scene_label="Boardroom pinstripe suit", designer="Patricia Field", era_decade="2000s",
              description="A cropped pinstripe jacket and skirt worn over a stark white blouse — Miranda's daytime uniform of understated, terrifying authority.",
              colors=["black", "grey"], materials=["wool", "cotton"], image_file="miranda-devilwearsprada-blacksuit.jpg",
@@ -63,8 +64,8 @@ DATA = [
     ]),
     ("The Devil Wears Prada", 2006, "David Frankel", "fashion-world", "Andy Sachs", [
         dict(scene_label="Paris finale look", designer="Patricia Field", era_decade="2000s",
-             description="The navy-and-cerulean transformation look, marking Andy's full arrival into the fashion world she once mocked.",
-             colors=["navy", "blue"], materials=["silk"], image_file=""),
+             description="A structured black-and-emerald dress worn walking through Paris — marking Andy's full arrival into the fashion world she once mocked.",
+             colors=["black", "green"], materials=["silk"], image_file="andysachs-devilwearsprada-parisfinale.webp"),
         dict(scene_label="First day at Runway", designer="Patricia Field", era_decade="2000s",
              description="The cable-knit sweater and plaid skirt Andy wears before her transformation — sensible, collegiate, completely wrong for the building she's walking into.",
              colors=["blue", "grey"], materials=["wool", "cotton"], image_file="andy-devilwearsprada-blyesweater.jpg"),
@@ -97,7 +98,7 @@ DATA = [
     ("Beetlejuice", 1988, "Tim Burton", "horror", "Lydia Deetz", [
         dict(scene_label="Wedding/sacrifice dress", designer="Aggie Guerard Rodgers", era_decade="1980s",
              description="A red gothic wedding gown that fuses bridal tradition with horror-movie dread.",
-             colors=["red", "black"], materials=["tulle", "lace"], image_file=""),
+             colors=["red", "black"], materials=["tulle", "lace"], image_file="lydiadeetz-beetlejuice-reddress.webp"),
     ]),
     ("The Addams Family", 1991, "Barry Sonnenfeld", "horror", "Morticia Addams", [
         dict(scene_label="Family portrait look", designer="Ruth Myers", era_decade="n/a",
@@ -106,8 +107,8 @@ DATA = [
     ]),
     ("Moulin Rouge!", 2001, "Baz Luhrmann", "fashion-world", "Satine", [
         dict(scene_label="Diamond stage number", designer="Catherine Martin", era_decade="1900s",
-             description="A showgirl look dripping in red and black, built for maximum stage drama.",
-             colors=["red", "black"], materials=["sequin", "satin"], image_file=""),
+             description="A gold sequined bodysuit with a sweeping white ostrich-feather train — Satine's entrance on the trapeze, swinging into the film's most famous number.",
+             colors=["gold", "white"], materials=["sequin", "satin"], image_file="satine-moulinrouge-diamondgown.jpeg"),
     ]),
     ("Frankenstein", 2025, "Guillermo del Toro", "horror", "Elizabeth Lavenza", [
         dict(scene_label="Debut introduction gown", designer="Kate Hawley", era_decade="1850s",
@@ -128,18 +129,19 @@ DATA = [
     ]),
     ("Portrait of a Lady on Fire", 2019, "Céline Sciamma", "period-drama", "Marianne", [
         dict(scene_label="Coastal walk, red dress", designer="Dorothée Guiraud", era_decade="1770s",
-             description="A single, stripped-down red dress that anchors Marianne's look throughout the film, following the director's one-outfit-per-character concept.",
-             colors=["red"], materials=["wool", "linen"], image_file=""),
+             description="A single, stripped-down maroon dress and coat that anchors Marianne's look throughout the film, following the director's one-outfit-per-character concept.",
+             colors=["burgundy"], materials=["wool", "linen"], image_file="marianne-portraitofalady-maroon.jpg"),
     ]),
     ("The Favourite", 2018, "Yorgos Lanthimos", "period-drama", "Sarah Churchill", [
         dict(scene_label="Palace hunting look", designer="Sandy Powell", era_decade="1700s",
-             description="A severe black-and-white silhouette that blends period tailoring with a modern, almost punk sensibility.",
-             colors=["black", "white"], materials=["wool", "leather"], image_file=""),
+             description="A severe black-and-white silhouette — lace-trimmed coat, tricorn hat, and a pistol raised mid-hunt — blending period tailoring with a modern, almost punk sensibility.",
+             colors=["black", "white"], materials=["wool", "leather"], image_file="sarahchurchill-thefavourite-huntinglook.jpg",
+             accessories="tricorn hat, pistol"),
     ]),
     ("Little Women", 2019, "Greta Gerwig", "period-drama", "Jo March", [
         dict(scene_label="Writing-desk attic scene", designer="Jacqueline Durran", era_decade="1860s",
-             description="A practical rust-toned dress reflecting Jo's independence and disinterest in the fashionable expectations placed on her sisters.",
-             colors=["rust", "khaki"], materials=["wool", "cotton"], image_file=""),
+             description="A forest-green jacket over a practical dress, worn writing at her desk — reflecting Jo's independence and disinterest in the fashionable expectations placed on her sisters.",
+             colors=["green", "khaki"], materials=["wool", "cotton"], image_file="jomarch-littlewomen-greenjacket.jpg"),
     ]),
     ("Little Women", 2019, "Greta Gerwig", "period-drama", "Amy March", [
         dict(scene_label="Attic sketching, blue cape", designer="Jacqueline Durran", era_decade="1860s",
@@ -149,8 +151,8 @@ DATA = [
     ]),
     ("Dune", 2021, "Denis Villeneuve", "sci-fi", "Chani", [
         dict(scene_label="Fremen stillsuit", designer="Jacqueline West", era_decade="n/a",
-             description="A functional desert stillsuit built from sand-toned gauze layered to evoke the rock and dust of Arrakis, designed with co-costume designer Bob Morgan.",
-             colors=["khaki", "rust"], materials=["leather", "cotton"], image_file=""),
+             description="A functional desert stillsuit in weathered grey armor plating with a khaki desert scarf, built to evoke the rock and dust of Arrakis, designed with co-costume designer Bob Morgan.",
+             colors=["khaki", "grey"], materials=["leather", "cotton"], image_file="chani-dune-stillsuit.avif"),
     ]),
     ("The Lord of the Rings: The Fellowship of the Ring", 2001, "Peter Jackson", "sci-fi", "Galadriel", [
         dict(scene_label="Mirror of Galadriel scene", designer="Ngila Dickson", era_decade="n/a",
@@ -169,18 +171,18 @@ DATA = [
     ]),
     ("House of Gucci", 2021, "Ridley Scott", "fashion-world", "Patrizia Reggiani", [
         dict(scene_label="Low-cut red evening dress", designer="Janty Yates", era_decade="1970s",
-             description="A daringly cut red dress altered on set for more leg, part of Patrizia's rise into the world of Italian luxury fashion.",
-             colors=["red"], materials=["satin", "silk"], image_file=""),
+             description="A daringly cut red dress altered on set for more leg, worn to a masquerade party — part of Patrizia's rise into the world of Italian luxury fashion.",
+             colors=["red"], materials=["satin", "silk"], image_file="patrizia-houseofgucci-reddress.jpg"),
     ]),
     ("Crimson Peak", 2015, "Guillermo del Toro", "horror", "Edith Cushing", [
         dict(scene_label="Allerdale Hall arrival", designer="Kate Hawley", era_decade="1900s",
-             description="A golden gothic gown that stands out against the decaying, snow-covered mansion, another del Toro/Hawley collaboration.",
-             colors=["gold", "black"], materials=["velvet", "lace"], image_file=""),
+             description="A deep crimson ruffled gown with a dramatic train, worn at the piano in Allerdale Hall — another del Toro/Hawley collaboration built around the mansion's blood-red clay.",
+             colors=["burgundy"], materials=["velvet", "lace"], image_file="edithcushing-crimsonpeak-piano.jpeg"),
     ]),
     ("Suspiria", 2018, "Luca Guadagnino", "horror", "Susie Bannion", [
         dict(scene_label="Dance academy rehearsal leotard", designer="Giulia Piersanti", era_decade="1970s",
-             description="A rich maroon leotard worn during dance classes, one of the few saturated color notes in the film's otherwise muted, foreboding palette.",
-             colors=["burgundy", "rust"], materials=["wool"], image_file=""),
+             description="A white leotard with a black waist belt, worn at the ballet barre during rehearsal — a rare moment of stillness in the film's otherwise muted, foreboding palette.",
+             colors=["white", "black"], materials=["cotton"], image_file="susiebannion-suspiria-whiteleotard.jpeg"),
     ]),
     ("Mr. & Mrs. Smith", 2005, "Doug Liman", "action", "Jane Smith", [
         dict(scene_label="Cocktail black dress, poster look", designer="", era_decade="2000s",

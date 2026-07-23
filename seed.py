@@ -16,7 +16,8 @@ DATA = [
     ("Marie Antoinette", 2006, "Sofia Coppola", "period-drama", "Marie Antoinette", [
         dict(scene_label="Cake & champagne scene", designer="Milena Canonero", era_decade="1770s",
              description="A pastel confection of a gown, styled to look almost edible — part of the film's deliberately anachronistic, sugar-pop take on Versailles.",
-             colors=["pastel-pink", "mint", "gold"], materials=["silk", "tulle"], image_file=""),
+             colors=["pastel-pink", "mint", "gold"], materials=["silk", "tulle"],
+             image_url="https://spxfashion.wordpress.com/wp-content/uploads/2012/10/2006_marie_antoinette_005.jpg"),
     ]),
     ("Pride & Prejudice", 2005, "Joe Wright", "period-drama", "Elizabeth Bennet", [
         dict(scene_label="Muddy-hem morning walk", designer="Jacqueline Durran", era_decade="1790s",
@@ -44,7 +45,8 @@ DATA = [
     ("Mad Max: Fury Road", 2015, "George Miller", "sci-fi", "Furiosa", [
         dict(scene_label="Wasteland warlord look", designer="Jenny Beavan", era_decade="n/a",
              description="Rust-toned utility wear built from scavenged materials — practical, armored, and completely without vanity.",
-             colors=["rust", "khaki"], materials=["leather", "denim"], image_file=""),
+             colors=["rust", "khaki"], materials=["leather", "denim"],
+             image_url="https://static.wikia.nocookie.net/roadwarrior/images/8/81/Imperator_furiosa2.PNG/revision/latest"),
     ]),
     ("The Devil Wears Prada", 2006, "David Frankel", "fashion-world", "Miranda Priestly", [
         dict(scene_label="Office entrance", designer="Patricia Field", era_decade="2000s",
@@ -88,7 +90,8 @@ DATA = [
     ("Breakfast at Tiffany's", 1961, "Blake Edwards", "fashion-world", "Holly Golightly", [
         dict(scene_label="Fifth Avenue window-shopping", designer="Hubert de Givenchy", era_decade="1960s",
              description="The little black dress and pearls that became one of the most referenced silhouettes in film costume history.",
-             colors=["black", "silver"], materials=["silk"], image_file="",
+             colors=["black", "silver"], materials=["silk"],
+             image_url="https://tomandlorenzo.com/wp-content/uploads/2020/07/One-Iconic-Look-Audrey-Hepburn-Breakfast-At-Tiffanys-Costumes-Movies-Fashion-Givenchy-Tom-Lorenzo-Site-17.jpg",
              accessories="pearl necklace, opera-length gloves"),
     ]),
     ("Beetlejuice", 1988, "Tim Burton", "horror", "Lydia Deetz", [
@@ -152,7 +155,8 @@ DATA = [
     ("The Lord of the Rings: The Fellowship of the Ring", 2001, "Peter Jackson", "sci-fi", "Galadriel", [
         dict(scene_label="Mirror of Galadriel scene", designer="Ngila Dickson", era_decade="n/a",
              description="A flowing white-and-gold gown that gives the Elven queen an otherworldly, almost luminous presence.",
-             colors=["white", "gold", "silver"], materials=["silk", "organza"], image_file=""),
+             colors=["white", "gold", "silver"], materials=["silk", "organza"],
+             image_url="https://static.wikia.nocookie.net/lotr/images/c/cb/Galadriel.jpg/revision/latest"),
     ]),
     ("Cruella", 2021, "Craig Gillespie", "fashion-world", "Cruella de Vil", [
         dict(scene_label="Runway crash entrance", designer="Jenny Beavan", era_decade="1970s",
@@ -606,7 +610,15 @@ def run():
         film_id = db.find_or_create_film(conn, film_title, year, director, genre)
         character_id = db.find_or_create_character(conn, char_name, film_id)
         for look in looks:
-            image_url = f"/static/img/{look['image_file']}" if look.get("image_file") else ""
+            # image_url is a full external link (verified before use, not downloaded);
+            # image_file is a local file already copied into static/img/. image_url wins
+            # if both happen to be set.
+            if look.get("image_url"):
+                image_url = look["image_url"]
+            elif look.get("image_file"):
+                image_url = f"/static/img/{look['image_file']}"
+            else:
+                image_url = ""
             db.insert_look(
                 conn, character_id, look["scene_label"], look["designer"], look["era_decade"],
                 look["description"], image_url, look["colors"], look["materials"],

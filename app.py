@@ -98,6 +98,16 @@ def mood_board(color):
     return render_template("mood_board.html", looks=looks, color=color, colors=db.COLOR_CATEGORIES)
 
 
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+
 @app.route("/add", methods=["GET", "POST"])
 def add_look():
     if request.method == "POST":

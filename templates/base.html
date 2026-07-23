@@ -32,6 +32,11 @@
             <line x1="78" y1="7" x2="120" y2="7"/>
         </svg>
         <p>A costume &amp; style archive — film meets fashion.</p>
+        <p class="footer-links">
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="{{ url_for('terms') }}">Terms &amp; Guidelines</a>
+        </p>
         <p class="admin-link">
             {% if session.get('is_admin') %}
             <a href="{{ url_for('admin_queue') }}">Review queue</a>

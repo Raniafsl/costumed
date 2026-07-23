@@ -175,7 +175,39 @@ main { padding: 3rem; max-width: 1200px; margin: 0 auto; }
     height: 14px;
     opacity: 0.55;
 }
-.admin-link { margin-top: 0.8rem; }
+.footer-links { margin-top: 1rem; }
+.footer-links a {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--caption);
+    transition: color 0.2s ease;
+}
+.footer-links a:hover { color: var(--gold); }
+.footer-links span { color: var(--caption); margin: 0 0.5rem; opacity: 0.5; }
+
+/* --- legal / long-form text pages --- */
+.prose {
+    max-width: 680px;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--text-light);
+}
+.prose p { margin: 0 0 1.2rem; }
+.prose p em { color: var(--caption); font-style: italic; }
+.prose h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.4rem;
+    color: var(--gold-bright);
+    margin: 2.2rem 0 0.8rem;
+}
+.prose h2:first-of-type { margin-top: 0.5rem; }
+.prose a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.prose a:hover { color: var(--gold-bright); }
+
+.admin-link { margin-top: 0.6rem; }
 .admin-link a {
     font-size: 0.62rem;
     letter-spacing: 0.08em;

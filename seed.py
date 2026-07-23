@@ -478,9 +478,9 @@ DATA = [
              accessories="orange leather gloves, green silk scarf, multiple handbags"),
     ]),
     ("Crazy Rich Asians", 2018, "Jon M. Chu", "romance", "Astrid Leong", [
-        dict(scene_label="Blue tulle off-shoulder gown", designer="Mary E. Vogt", era_decade="2010s",
-             description="A powder-blue off-shoulder tulle gown, worn to a wedding as one of the film's quieter, more restrained looks.",
-             colors=["blue"], materials=["tulle"], image_file="constancewu-crazyrichasians-bluetulle.jpeg"),
+        dict(scene_label="Ice-blue floral-appliqué gown", designer="Mary E. Vogt", era_decade="2010s",
+             description="A pale ice-blue tulle gown with floral appliqué at the shoulders and waist and a deep V neckline, worn to a wedding as one of the film's quieter, more restrained looks.",
+             colors=["blue"], materials=["tulle"], image_file="gemmachan-crazyrichasians-icebluetulle.jpeg"),
     ]),
     ("Crazy Rich Asians", 2018, "Jon M. Chu", "romance", "Rachel Chu", [
         dict(scene_label="Gold sequined wedding gown", designer="Mary E. Vogt", era_decade="2010s",

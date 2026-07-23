@@ -64,6 +64,12 @@ CREATE TABLE IF NOT EXISTS looks (
     status TEXT DEFAULT 'approved',
     contributor TEXT
 );
+
+CREATE TABLE IF NOT EXISTS page_views (
+    id SERIAL PRIMARY KEY,
+    path TEXT NOT NULL,
+    viewed_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
 """
 
 # Runs every time init_db() is called — safe to repeat, and it's what
@@ -282,3 +288,36 @@ def get_distinct_decades():
     rows = cur.fetchall()
     conn.close()
     return [r["era_decade"] for r in rows]
+
+
+def log_page_view(path):
+    """Anonymous view counter — just a page path and a timestamp, no cookies,
+    no IP address, nothing that identifies a visitor."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO page_views (path) VALUES (%s)", (path,))
+    conn.commit()
+    conn.close()
+
+
+def get_view_stats():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) AS c FROM page_views")
+    total = cur.fetchone()["c"]
+    cur.execute("SELECT COUNT(*) AS c FROM page_views WHERE viewed_at > NOW() - INTERVAL '7 days'")
+    last_7_days = cur.fetchone()["c"]
+    cur.execute("SELECT COUNT(*) AS c FROM page_views WHERE viewed_at > NOW() - INTERVAL '1 day'")
+    last_24h = cur.fetchone()["c"]
+    cur.execute(
+        """SELECT path, COUNT(*) AS c FROM page_views
+           GROUP BY path ORDER BY c DESC LIMIT 5"""
+    )
+    top_pages = cur.fetchall()
+    conn.close()
+    return {
+        "total": total,
+        "last_7_days": last_7_days,
+        "last_24h": last_24h,
+        "top_pages": top_pages,
+    }

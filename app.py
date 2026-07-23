@@ -37,6 +37,25 @@ def gradient_for(colors):
 app.jinja_env.globals["gradient_for"] = gradient_for
 
 
+NON_CONTENT_PATHS = {"/favicon.ico", "/robots.txt"}
+
+
+@app.before_request
+def track_page_view():
+    """Anonymous view counter for public pages only — never for admin
+    routes, static assets, or POSTs. Never allowed to break a real request."""
+    if (
+        request.method == "GET"
+        and not request.path.startswith("/static/")
+        and not request.path.startswith("/admin")
+        and request.path not in NON_CONTENT_PATHS
+    ):
+        try:
+            db.log_page_view(request.path)
+        except Exception:
+            pass
+
+
 @app.route("/")
 def index():
     """Browse page — supports filtering by color, material, genre, and decade via query params."""
@@ -172,7 +191,11 @@ def admin_logout():
 @app.route("/admin")
 @require_admin
 def admin_queue():
-    return render_template("admin_queue.html", pending=db.get_pending_looks())
+    return render_template(
+        "admin_queue.html",
+        pending=db.get_pending_looks(),
+        stats=db.get_view_stats(),
+    )
 
 
 @app.route("/admin/approve/<int:look_id>", methods=["POST"])

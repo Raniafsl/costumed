@@ -9,6 +9,31 @@
     <button type="submit" class="btn ghost">Log out</button>
 </form>
 
+<div class="stats-block">
+    <div class="stat">
+        <span class="stat-number">{{ stats.total }}</span>
+        <span class="stat-label">Total views</span>
+    </div>
+    <div class="stat">
+        <span class="stat-number">{{ stats.last_7_days }}</span>
+        <span class="stat-label">Last 7 days</span>
+    </div>
+    <div class="stat">
+        <span class="stat-number">{{ stats.last_24h }}</span>
+        <span class="stat-label">Last 24 hours</span>
+    </div>
+    {% if stats.top_pages %}
+    <div class="stat stat-wide">
+        <span class="stat-label">Most viewed</span>
+        <ul class="stat-top-pages">
+            {% for p in stats.top_pages %}
+            <li><a href="{{ p.path }}">{{ p.path }}</a> — {{ p.c }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
 {% if pending %}
 <p class="result-count">{{ pending|length }} submission{{ 's' if pending|length != 1 else '' }} awaiting review</p>
 <div class="review-list">

@@ -835,6 +835,43 @@ main { padding: 3rem; max-width: 1200px; margin: 0 auto; }
     margin: 0.5rem 0 1.5rem;
 }
 
+/* --- admin stats --- */
+.stats-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(242, 237, 228, 0.15);
+}
+.stat { min-width: 100px; }
+.stat-number {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 2.2rem;
+    color: var(--gold-bright);
+    line-height: 1.1;
+}
+.stat-label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--caption);
+    margin-top: 0.3rem;
+}
+.stat-wide { flex-basis: 100%; }
+.stat-top-pages {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    font-size: 0.82rem;
+    color: var(--text-light);
+}
+.stat-top-pages li { margin-bottom: 0.3rem; }
+.stat-top-pages a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+
 /* --- review queue --- */
 .review-list {
     display: grid;

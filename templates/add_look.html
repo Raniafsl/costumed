@@ -4,6 +4,9 @@
 
 <span class="page-eyebrow">Contribute</span>
 <h1 class="page-title">Add a look to the archive</h1>
+<p class="detail-description" style="border: none; padding-left: 0; font-size: 1rem;">
+    New submissions are reviewed before they join the public archive.
+</p>
 
 <form method="post" class="entry-form">
     <div>
@@ -55,6 +58,10 @@
         <input type="text" id="accessories" name="accessories" placeholder="e.g. pearl necklace, opera gloves">
     </div>
     <div>
+        <label for="contributor">Your name (optional)</label>
+        <input type="text" id="contributor" name="contributor" placeholder="Credited once your submission is approved">
+    </div>
+    <div>
         <label>Colors</label>
         <div class="color-checks">
             {% for c in colors %}
@@ -69,6 +76,10 @@
             <label><input type="checkbox" name="materials" value="{{ m }}"> {{ m }}</label>
             {% endfor %}
         </div>
+    </div>
+    <div class="hp-field" aria-hidden="true">
+        <label for="website">Leave this field blank</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
     </div>
     <button type="submit" class="submit-btn">Add to archive</button>
 </form>

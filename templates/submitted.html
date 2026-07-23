@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Submitted — Costumed{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">Thank you</span>
+<h1 class="page-title">Your look is in for review</h1>
+<p class="detail-description" style="border: none; padding-left: 0;">
+    Every new submission gets a quick look before it joins the archive — check back soon.
+</p>
+<p style="margin-top:2rem;">
+    <a href="{{ url_for('add_look') }}" class="btn">Add another look</a>
+    <a href="{{ url_for('index') }}" class="btn ghost">Back to the archive</a>
+</p>
+
+{% endblock %}

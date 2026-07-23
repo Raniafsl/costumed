@@ -51,6 +51,9 @@
         {% if look.description %}
         <p class="detail-description">{{ look.description }}</p>
         {% endif %}
+        {% if look.contributor %}
+        <p class="contributor-credit">Contributed by {{ look.contributor }}</p>
+        {% endif %}
 
         {% if other_looks %}
         <h3 class="related-heading">More from {{ look.character_name }}</h3>

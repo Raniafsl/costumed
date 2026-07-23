@@ -60,17 +60,23 @@ CREATE TABLE IF NOT EXISTS looks (
     colors TEXT,
     materials TEXT,
     brand TEXT,
-    accessories TEXT
+    accessories TEXT,
+    status TEXT DEFAULT 'approved',
+    contributor TEXT
 );
 """
 
 # Runs every time init_db() is called — safe to repeat, and it's what
 # brings an already-existing looks table (created before these fields
-# existed) up to date without touching any existing data.
+# existed) up to date without touching any existing data. The DEFAULT on
+# status means every pre-existing look is automatically 'approved' —
+# nothing already in the archive gets hidden by this change.
 MIGRATIONS = """
 ALTER TABLE looks ADD COLUMN IF NOT EXISTS materials TEXT;
 ALTER TABLE looks ADD COLUMN IF NOT EXISTS brand TEXT;
 ALTER TABLE looks ADD COLUMN IF NOT EXISTS accessories TEXT;
+ALTER TABLE looks ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'approved';
+ALTER TABLE looks ADD COLUMN IF NOT EXISTS contributor TEXT;
 """
 
 
@@ -132,16 +138,17 @@ def find_or_create_character(conn, name, film_id):
 
 
 def insert_look(conn, character_id, scene_label, designer, era_decade,
-                 description, image_url, colors, materials=None, brand="", accessories=""):
+                 description, image_url, colors, materials=None, brand="", accessories="",
+                 status="approved", contributor=""):
     cur = conn.cursor()
     cur.execute(
         """INSERT INTO looks
            (character_id, scene_label, designer, era_decade, description, image_url,
-            colors, materials, brand, accessories)
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+            colors, materials, brand, accessories, status, contributor)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
         (character_id, scene_label, designer, era_decade, description,
          image_url, colors_to_str(colors), colors_to_str(materials or []),
-         brand, accessories),
+         brand, accessories, status, contributor),
     )
     return cur.fetchone()["id"]
 
@@ -155,7 +162,7 @@ def get_all_looks(genre=None, decade=None, search=None):
         FROM looks
         JOIN characters ON looks.character_id = characters.id
         JOIN films ON characters.film_id = films.id
-        WHERE 1=1
+        WHERE looks.status = 'approved'
     """
     params = []
     if genre:
@@ -183,7 +190,7 @@ def get_all_looks(genre=None, decade=None, search=None):
 def get_random_look_id():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id FROM looks ORDER BY RANDOM() LIMIT 1")
+    cur.execute("SELECT id FROM looks WHERE status = 'approved' ORDER BY RANDOM() LIMIT 1")
     row = cur.fetchone()
     conn.close()
     return row["id"] if row else None
@@ -198,7 +205,7 @@ def get_look(look_id):
            FROM looks
            JOIN characters ON looks.character_id = characters.id
            JOIN films ON characters.film_id = films.id
-           WHERE looks.id = %s""",
+           WHERE looks.id = %s AND looks.status = 'approved'""",
         (look_id,),
     )
     row = cur.fetchone()
@@ -216,7 +223,7 @@ def get_other_looks_for_character(character_id, exclude_look_id):
            FROM looks
            JOIN characters ON looks.character_id = characters.id
            JOIN films ON characters.film_id = films.id
-           WHERE looks.character_id = %s AND looks.id != %s""",
+           WHERE looks.character_id = %s AND looks.id != %s AND looks.status = 'approved'""",
         (character_id, exclude_look_id),
     )
     rows = cur.fetchall()
@@ -225,6 +232,34 @@ def get_other_looks_for_character(character_id, exclude_look_id):
         dict(r, colors=colors_from_str(r["colors"]), materials=colors_from_str(r["materials"]))
         for r in rows
     ]
+
+
+def get_pending_looks():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT looks.*, characters.name AS character_name,
+                  films.title AS film_title, films.year AS film_year
+           FROM looks
+           JOIN characters ON looks.character_id = characters.id
+           JOIN films ON characters.film_id = films.id
+           WHERE looks.status = 'pending'
+           ORDER BY looks.id DESC"""
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return [
+        dict(r, colors=colors_from_str(r["colors"]), materials=colors_from_str(r["materials"]))
+        for r in rows
+    ]
+
+
+def update_look_status(look_id, status):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE looks SET status = %s WHERE id = %s", (status, look_id))
+    conn.commit()
+    conn.close()
 
 
 def get_distinct_genres():

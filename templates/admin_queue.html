@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Review Queue — Costumed{% endblock %}
+{% block content %}
+
+<span class="page-eyebrow">Private</span>
+<h1 class="page-title">Review queue</h1>
+
+<form method="post" action="{{ url_for('admin_logout') }}" style="margin: -1rem 0 2rem;">
+    <button type="submit" class="btn ghost">Log out</button>
+</form>
+
+{% if pending %}
+<p class="result-count">{{ pending|length }} submission{{ 's' if pending|length != 1 else '' }} awaiting review</p>
+<div class="review-list">
+    {% for look in pending %}
+    <div class="review-item">
+        <div class="review-media">
+            {% if look.image_url %}
+            <img src="{{ look.image_url }}" alt="{{ look.scene_label }}">
+            {% else %}
+            <div class="card-media-placeholder" style="background: {{ gradient_for(look.colors) }};">
+                <span class="placeholder-mark">{{ look.character_name[0]|upper }}</span>
+            </div>
+            {% endif %}
+        </div>
+        <div class="review-body">
+            <span class="card-eyebrow">{{ look.film_title }} &middot; {{ look.film_year }}</span>
+            <h2 class="card-name">{{ look.character_name }}</h2>
+            <p class="card-scene">{{ look.scene_label }}</p>
+            {% if look.description %}<p class="review-desc">{{ look.description }}</p>{% endif %}
+            <div class="card-meta">
+                {{ look.designer }}{% if look.era_decade %} &middot; {{ look.era_decade }}{% endif %}
+                {% if look.colors %} &middot; {{ look.colors|join(', ') }}{% endif %}
+                {% if look.materials %} &middot; {{ look.materials|join(', ') }}{% endif %}
+            </div>
+            {% if look.brand %}<p class="review-meta-line">Brand: {{ look.brand }}</p>{% endif %}
+            {% if look.accessories %}<p class="review-meta-line">Accessories: {{ look.accessories }}</p>{% endif %}
+            {% if look.contributor %}<p class="review-contributor">Submitted by {{ look.contributor }}</p>{% endif %}
+            <div class="review-actions">
+                <form method="post" action="{{ url_for('admin_approve', look_id=look.id) }}">
+                    <button type="submit" class="btn">Approve</button>
+                </form>
+                <form method="post" action="{{ url_for('admin_reject', look_id=look.id) }}">
+                    <button type="submit" class="btn ghost">Reject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">Nothing waiting for review right now.</p>
+{% endif %}
+
+{% endblock %}

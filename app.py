@@ -1,10 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+import hmac
 import os
 import random
+import secrets
+from functools import wraps
 import db
 
 app = Flask(__name__)
 app.jinja_env.globals["color_hex"] = lambda tag: db.COLOR_HEX.get(tag, "#999999")
+
+# Falls back to a random key if unset, so the site still works without it —
+# admin sessions just won't survive a restart until SECRET_KEY is set.
+app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+
+
+def require_admin(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not session.get("is_admin"):
+            return redirect(url_for("admin_login"))
+        return view(*args, **kwargs)
+    return wrapped
 
 
 def gradient_for(colors):
@@ -84,6 +101,11 @@ def mood_board(color):
 @app.route("/add", methods=["GET", "POST"])
 def add_look():
     if request.method == "POST":
+        # Honeypot: real visitors never see or fill in this field, so anything
+        # that does is almost certainly a bot. Pretend it worked and move on.
+        if request.form.get("website", "").strip():
+            return render_template("submitted.html")
+
         conn = db.get_connection()
 
         film_id = db.find_or_create_film(
@@ -96,7 +118,7 @@ def add_look():
         character_id = db.find_or_create_character(
             conn, request.form["character_name"].strip(), film_id
         )
-        look_id = db.insert_look(
+        db.insert_look(
             conn,
             character_id,
             request.form.get("scene_label", "").strip(),
@@ -108,13 +130,53 @@ def add_look():
             request.form.getlist("materials"),
             request.form.get("brand", "").strip(),
             request.form.get("accessories", "").strip(),
+            status="pending",
+            contributor=request.form.get("contributor", "").strip(),
         )
         conn.commit()
         conn.close()
 
-        return redirect(url_for("look_detail", look_id=look_id))
+        return render_template("submitted.html")
 
     return render_template("add_look.html", colors=db.COLOR_CATEGORIES, materials=db.MATERIAL_CATEGORIES)
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+    if request.method == "POST":
+        submitted = request.form.get("password", "")
+        if ADMIN_PASSWORD and hmac.compare_digest(submitted, ADMIN_PASSWORD):
+            session["is_admin"] = True
+            return redirect(url_for("admin_queue"))
+        error = "Wrong password."
+    return render_template("admin_login.html", error=error)
+
+
+@app.route("/admin/logout", methods=["POST"])
+def admin_logout():
+    session.pop("is_admin", None)
+    return redirect(url_for("index"))
+
+
+@app.route("/admin")
+@require_admin
+def admin_queue():
+    return render_template("admin_queue.html", pending=db.get_pending_looks())
+
+
+@app.route("/admin/approve/<int:look_id>", methods=["POST"])
+@require_admin
+def admin_approve(look_id):
+    db.update_look_status(look_id, "approved")
+    return redirect(url_for("admin_queue"))
+
+
+@app.route("/admin/reject/<int:look_id>", methods=["POST"])
+@require_admin
+def admin_reject(look_id):
+    db.update_look_status(look_id, "rejected")
+    return redirect(url_for("admin_queue"))
 
 
 def ensure_seeded():

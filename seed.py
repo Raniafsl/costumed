@@ -579,6 +579,18 @@ DATA = [
              colors=["black", "gold"], materials=["wool"], image_file="nomimalone-showgirls-versaceblack.jpeg",
              brand="Versace"),
     ]),
+    ("Marty Supreme", 2025, "Josh Safdie", "drama", "Kay Stone", [
+        dict(scene_label="Red coat, black gloves", designer="", era_decade="1950s",
+             description="A voluminous red taffeta coat worn over black opera gloves — old-Hollywood glamour against the film's ping-pong-hall grit.",
+             colors=["red"], materials=["satin"], image_file="martysupreme-redcoat.jpeg",
+             accessories="black opera gloves"),
+    ]),
+    ("Broken Embraces", 2009, "Pedro Almodóvar", "drama", "Lena", [
+        dict(scene_label="Black dress, gold chain draping", designer="", era_decade="2000s",
+             description="A black dress laced with cascading gold chains — one of Lena's most editorial, fashion-forward looks in the film.",
+             colors=["black", "gold"], materials=["chiffon"], image_file="lena-brokenembraces-blackandgold.jpeg",
+             accessories="layered gold chains"),
+    ]),
 ]
 
 

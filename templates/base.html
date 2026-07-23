@@ -37,6 +37,13 @@
             <span aria-hidden="true">&middot;</span>
             <a href="{{ url_for('terms') }}">Terms &amp; Guidelines</a>
         </p>
+        <p class="footer-credit">
+            Built by Rania Faisal
+            <span aria-hidden="true">&middot;</span>
+            <a href="https://www.linkedin.com/in/rania-faisal-500b5032b/">LinkedIn</a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="https://github.com/Raniafsl">GitHub</a>
+        </p>
         <p class="admin-link">
             {% if session.get('is_admin') %}
             <a href="{{ url_for('admin_queue') }}">Review queue</a>

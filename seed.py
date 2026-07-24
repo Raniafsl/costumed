@@ -47,7 +47,7 @@ DATA = [
         dict(scene_label="Wasteland warlord look", designer="Jenny Beavan", era_decade="n/a",
              description="Rust-toned utility wear built from scavenged materials — practical, armored, and completely without vanity.",
              colors=["rust", "khaki"], materials=["leather", "denim"],
-             image_url="https://static.wikia.nocookie.net/roadwarrior/images/8/81/Imperator_furiosa2.PNG/revision/latest"),
+             image_file="charlizetheron-furyroad-warrigcloseup.png"),
     ]),
     ("The Devil Wears Prada", 2006, "David Frankel", "fashion-world", "Miranda Priestly", [
         dict(scene_label="Office entrance", designer="Patricia Field", era_decade="2000s",
